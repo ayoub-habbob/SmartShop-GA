@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SmartShop — الخوارزمية الجينية للتوصيات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0a0a0f;
+  --surface:  #12121a;
+  --card:     #1a1a26;
+  --border:   #2a2a40;
+  --accent:   #6c63ff;
+  --accent2:  #ff6584;
+  --accent3:  #43e97b;
+  --text:     #e8e8f0;
+  --muted:    #7070a0;
+  --glow:     rgba(108,99,255,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Background mesh ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(255,101,132,0.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.wrapper { position:relative; z-index:1; max-width:1300px; margin:0 auto; padding:0 24px; }
+
+/* ── Header ── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  margin-bottom: 40px;
+}
+.header-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-icon {
+  width:44px; height:44px; border-radius:12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; box-shadow: 0 0 20px var(--glow);
+}
+.logo h1 { font-size:1.4rem; font-weight:900; letter-spacing:-0.5px; }
+.logo span { color:var(--accent); }
+.badge {
+  font-family:'Space Mono', monospace;
+  font-size:0.65rem; background: rgba(108,99,255,0.15);
+  border:1px solid rgba(108,99,255,0.3);
+  color:var(--accent); padding:4px 10px; border-radius:20px;
+}
+
+/* ── Stats bar ── */
+.stats-bar {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  margin-bottom:40px;
+}
+.stat-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:20px; text-align:center;
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.stat-num { font-size:2rem; font-weight:900; color:var(--accent); font-family:'Space Mono',monospace; }
+.stat-lbl { font-size:0.8rem; color:var(--muted); margin-top:4px; }
+
+/* ── Main layout ── */
+.main-grid { display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:start; }
+
+/* ── Control Panel ── */
+.panel {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:24px;
+  position:sticky; top:24px;
+}
+.panel-title {
+  font-size:1rem; font-weight:700; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.panel-title .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); }
+
+.form-group { margin-bottom:18px; }
+label { display:block; font-size:0.8rem; color:var(--muted); margin-bottom:8px; }
+select, input[type=range] {
+  width:100%; background:var(--surface);
+  border:1px solid var(--border); border-radius:10px;
+  color:var(--text); padding:10px 14px; font-family:inherit; font-size:0.9rem;
+  outline:none; transition:border-color 0.2s;
+  -webkit-appearance:none; appearance:none;
+}
+select:focus { border-color:var(--accent); }
+input[type=range] {
+  padding:4px; cursor:pointer;
+  accent-color:var(--accent);
+}
+.range-row { display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-top:4px; }
+
+.btn-run {
+  width:100%; padding:14px; border:none; border-radius:12px;
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  color:#fff; font-family:'Cairo',sans-serif; font-size:1rem; font-weight:700;
+  cursor:pointer; transition:opacity 0.2s, transform 0.2s;
+  box-shadow:0 4px 20px var(--glow);
+}
+.btn-run:hover { opacity:0.9; transform:translateY(-1px); }
+.btn-run:active { transform:translateY(0); }
+.btn-run:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* ── Results area ── */
+.results-area { min-height:400px; }
+
+/* User info card */
+.user-info {
+  background:linear-gradient(135deg, rgba(108,99,255,0.15), rgba(255,101,132,0.1));
+  border:1px solid rgba(108,99,255,0.3);
+  border-radius:16px; padding:16px 20px;
+  margin-bottom:24px; display:flex; gap:20px; align-items:center; flex-wrap:wrap;
+  animation:fadeSlide 0.5s ease;
+}
+.user-avatar {
+  width:48px; height:48px; border-radius:50%;
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;
+}
+.user-details h3 { font-weight:700; font-size:1rem; }
+.user-details p  { font-size:0.8rem; color:var(--muted); margin-top:2px; }
+.gen-badge {
+  margin-right:auto;
+  font-family:'Space Mono',monospace; font-size:0.7rem;
+  background:rgba(67,233,123,0.1); border:1px solid rgba(67,233,123,0.3);
+  color:var(--accent3); padding:6px 12px; border-radius:20px;
+}
+
+/* Fitness chart */
+.chart-section {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:20px; margin-bottom:24px;
+  animation:fadeSlide 0.5s ease 0.1s both;
+}
+.chart-title { font-size:0.85rem; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.chart-wrap { height:100px; position:relative; overflow:hidden; }
+canvas#fitnessChart { width:100%!important; height:100%!important; }
+
+/* Product grid */
+.products-section { animation:fadeSlide 0.5s ease 0.2s both; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.section-header h2 { font-size:1.1rem; font-weight:700; }
+.count-chip {
+  font-size:0.75rem; font-family:'Space Mono',monospace;
+  background:rgba(108,99,255,0.15); color:var(--accent);
+  padding:4px 10px; border-radius:20px;
+}
+
+.products-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+.product-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+  transition:transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  animation:cardPop 0.4s ease both;
+}
+.product-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,0.4);
+  border-color:var(--accent);
+}
+.card-top {
+  height:80px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2rem;
+}
+.card-body { padding:14px; }
+.card-cat {
+  font-size:0.68rem; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted); margin-bottom:6px;
+}
+.card-id { font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--accent); margin-bottom:8px; }
+.card-price { font-size:1.1rem; font-weight:700; color:var(--text); }
+.card-price span { font-size:0.75rem; color:var(--muted); font-weight:400; }
+.stars { display:flex; gap:2px; margin-top:8px; align-items:center; }
+.star { font-size:0.75rem; }
+.avg-r { font-size:0.72rem; color:var(--muted); margin-right:4px; }
+
+/* Loading state */
+.loading-wrap {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; min-height:300px; gap:16px;
+}
+.dna-loader {
+  width:48px; height:48px;
+  border:3px solid var(--border);
+  border-top-color:var(--accent);
+  border-right-color:var(--accent2);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+.loading-text { color:var(--muted); font-size:0.9rem; }
+
+/* Empty state */
+.empty-state {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; min-height:300px; gap:12px;
+  color:var(--muted); text-align:center;
+}
+.empty-icon { font-size:3rem; opacity:0.4; }
+.empty-state p { font-size:0.9rem; max-width:280px; line-height:1.6; }
+
+/* Tabs */
+.tabs { display:flex; gap:8px; margin-bottom:24px; }
+.tab {
+  padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600;
+  cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted);
+  transition:all 0.2s; font-family:'Cairo',sans-serif;
+}
+.tab.active { background:rgba(108,99,255,0.15); border-color:var(--accent); color:var(--accent); }
+
+/* Dataset stats section */
+.stats-section { animation:fadeSlide 0.4s ease; }
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.stats-widget {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:20px;
+}
+.stats-widget h3 { font-size:0.85rem; color:var(--muted); margin-bottom:14px; }
+.bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.bar-label { font-size:0.78rem; min-width:90px; text-align:right; color:var(--text); }
+.bar-track { flex:1; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+.bar-fill  { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width 1s ease; }
+.bar-val   { font-size:0.72rem; color:var(--muted); min-width:35px; font-family:'Space Mono',monospace; }
+
+.behavior-row { display:flex; justify-content:space-around; text-align:center; }
+.beh-item .beh-num { font-size:1.4rem; font-weight:900; }
+.beh-item .beh-lbl { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+
+/* ── Animations ── */
+@keyframes fadeSlide { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes cardPop   { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+@keyframes spin      { to{transform:rotate(360deg)} }
+
+/* delay stagger for cards */
+.product-card:nth-child(1){animation-delay:0.05s}
+.product-card:nth-child(2){animation-delay:0.10s}
+.product-card:nth-child(3){animation-delay:0.15s}
+.product-card:nth-child(4){animation-delay:0.20s}
+.product-card:nth-child(5){animation-delay:0.25s}
+.product-card:nth-child(6){animation-delay:0.30s}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .main-grid{grid-template-columns:1fr}
+  .panel{position:static}
+  .products-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .products-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🧬</div>
+      <div>
+        <h1>Smart<span>Shop</span> GA</h1>
+      </div>
+    </div>
+    <div class="badge">Genetic Algorithm · Recommendation System</div>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num">{{ total_users }}</div>
+    <div class="stat-lbl">👤 مستخدم</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ total_products }}</div>
+    <div class="stat-lbl">📦 منتج</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ total_ratings }}</div>
+    <div class="stat-lbl">⭐ تقييم</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">{{ total_behaviors }}</div>
+    <div class="stat-lbl">🖱️ سلوك مستخدم</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="showTab('recommendations')">🎯 التوصيات</button>
+  <button class="tab" onclick="showTab('dataset')">📊 إحصائيات الداتا</button>
+</div>
+
+<!-- ══ RECOMMENDATIONS TAB ══ -->
+<div id="tab-recommendations">
+<div class="main-grid">
+
+  <!-- Control Panel -->
+  <div class="panel">
+    <div class="panel-title"><span class="dot"></span> إعدادات الخوارزمية</div>
+
+    <div class="form-group">
+      <label>👤 اختر المستخدم</label>
+      <select id="userSelect">
+        {% for u in users %}
+        <option value="{{ u.user_id }}">User #{{ u.user_id }} — {{ u.country }} ({{ u.age }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>📦 عدد التوصيات: <strong id="nRecsVal">6</strong></label>
+      <input type="range" id="nRecs" min="3" max="9" value="6"
+             oninput="document.getElementById('nRecsVal').textContent=this.value">
+      <div class="range-row"><span>3</span><span>9</span></div>
+    </div>
+
+    <div class="form-group">
+      <label>🔁 عدد الأجيال: <strong id="genVal">60</strong></label>
+      <input type="range" id="genRange" min="20" max="150" value="60"
+             oninput="document.getElementById('genVal').textContent=this.value">
+      <div class="range-row"><span>20</span><span>150</span></div>
+    </div>
+
+    <button class="btn-run" id="runBtn" onclick="runGA()">
+      🧬 تشغيل الخوارزمية الجينية
+    </button>
+
+    <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+      <div style="font-size:0.75rem; color:var(--muted); line-height:1.8;">
+        <div>⚙️ <strong style="color:var(--text)">الانتقاء الطبيعي:</strong> أفضل 20% يبقون</div>
+        <div>🔀 <strong style="color:var(--text)">التزاوج:</strong> نقطة عشوائية</div>
+        <div>🎲 <strong style="color:var(--text)">الطفرة:</strong> معدل 15%</div>
+        <div>🎯 <strong style="color:var(--text)">التنويع:</strong> مكافأة الفئات</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-area" id="resultsArea">
+    <div class="empty-state">
+      <div class="empty-icon">🧬</div>
+      <p>اختر مستخدماً وشغّل الخوارزمية الجينية لرؤية التوصيات المخصصة</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══ DATASET TAB ══ -->
+<div id="tab-dataset" style="display:none">
+  <div class="stats-section" id="datasetContent">
+    <div class="loading-wrap">
+      <div class="dna-loader"></div>
+      <div class="loading-text">جاري تحميل الإحصائيات...</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end wrapper -->
+
+<script>
+// ── Category icons ──
+const CAT_ICONS = {
+  'Electronics':'📱','Clothing':'👗','Books':'📚','Toys':'🧸',
+  'Sports':'⚽','Home':'🏠','Beauty':'💄','Food':'🍎',
+  'Jewelry':'💎','Furniture':'🛋️'
+};
+function catIcon(c){ return CAT_ICONS[c] || '📦'; }
+function catColor(c){
+  const map={Electronics:'#6c63ff',Clothing:'#ff6584',Books:'#43e97b',
+    Toys:'#f7971e',Sports:'#4facfe',Home:'#fa709a',
+    Beauty:'#a18cd1',Food:'#fda085',Jewelry:'#f093fb',Furniture:'#c471ed'};
+  return map[c]||'#7070a0';
+}
+
+// ── Tabs ──
+function showTab(name){
+  ['recommendations','dataset'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===name?'':'none';
+    document.querySelectorAll('.tab')[t==='recommendations'?0:1]
+      .classList.toggle('active', t===name);
+  });
+  if(name==='dataset') loadDatasetStats();
+}
+
+// ── Run GA ──
+async function runGA(){
+  const btn = document.getElementById('runBtn');
+  const userId = document.getElementById('userSelect').value;
+  const nRecs  = document.getElementById('nRecs').value;
+  const gens   = document.getElementById('genRange').value;
+  btn.disabled=true; btn.textContent='⏳ جارٍ التشغيل...';
+
+  document.getElementById('resultsArea').innerHTML=`
+    <div class="loading-wrap">
+      <div class="dna-loader"></div>
+      <div class="loading-text">الخوارزمية تعمل... الجيل الأمثل قيد الانتخاب 🧬</div>
+    </div>`;
+
+  try{
+    const res = await fetch('/recommend',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({user_id:parseInt(userId), n_recs:parseInt(nRecs), generations:parseInt(gens)})
+    });
+    const data = await res.json();
+    renderResults(data);
+  } catch(e){
+    document.getElementById('resultsArea').innerHTML=`<div class="empty-state"><div class="empty-icon">⚠️</div><p>خطأ في الاتصال بالخادم</p></div>`;
+  }
+  btn.disabled=false; btn.textContent='🧬 تشغيل الخوارزمية الجينية';
+}
+
+function renderResults(data){
+  const {user, recommendations, fitness_history, generations_run} = data;
+  const bestFit = fitness_history[fitness_history.length-1];
+
+  let html = `
+  <div class="user-info">
+    <div class="user-avatar">👤</div>
+    <div class="user-details">
+      <h3>User #${user.user_id} — ${user.country}</h3>
+      <p>العمر: ${user.age} سنة</p>
+    </div>
+    <div class="gen-badge">✅ ${generations_run} جيل · Fitness: ${bestFit}</div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-title">📈 تطور الـ Fitness عبر الأجيال</div>
+    <div class="chart-wrap"><canvas id="fitnessChart"></canvas></div>
+  </div>
+
+  <div class="products-section">
+    <div class="section-header">
+      <h2>🎯 المنتجات الموصى بها</h2>
+      <span class="count-chip">${recommendations.length} منتجات</span>
+    </div>
+    <div class="products-grid">`;
+
+  recommendations.forEach(p => {
+    const stars = renderStars(p.avg_rating);
+    const color = catColor(p.category);
+    html += `
+    <div class="product-card">
+      <div class="card-top" style="background:linear-gradient(135deg,${color}22,${color}11)">
+        ${catIcon(p.category)}
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${p.category}</div>
+        <div class="card-id">#${p.product_id}</div>
+        <div class="card-price">${p.price.toLocaleString()} <span>ريال</span></div>
+        <div class="stars">${stars}<span class="avg-r">${p.avg_rating}</span></div>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>`;
+  document.getElementById('resultsArea').innerHTML = html;
+
+  // Draw fitness chart
+  drawFitnessChart(fitness_history);
+}
+
+function renderStars(avg){
+  let s='';
+  for(let i=1;i<=5;i++){
+    s+=`<span class="star" style="color:${i<=Math.round(avg)?'#f7971e':'#333'}">★</span>`;
+  }
+  return s;
+}
+
+function drawFitnessChart(history){
+  const canvas = document.getElementById('fitnessChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=canvas.offsetWidth||800, H=canvas.offsetHeight||100;
+  canvas.width=W; canvas.height=H;
+
+  const min=Math.min(...history)*0.9, max=Math.max(...history)*1.02;
+  const pts = history.map((v,i)=>({
+    x: (i/(history.length-1))*W,
+    y: H - ((v-min)/(max-min))*(H-10) - 5
+  }));
+
+  // gradient fill
+  const grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'rgba(108,99,255,0.3)');
+  grad.addColorStop(1,'rgba(108,99,255,0)');
+
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, H);
+  pts.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.lineTo(pts[pts.length-1].x, H);
+  ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+
+  ctx.beginPath();
+  pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle='#6c63ff'; ctx.lineWidth=2; ctx.stroke();
+}
+
+// ── Dataset Stats ──
+let statsLoaded=false;
+async function loadDatasetStats(){
+  if(statsLoaded) return;
+  const res = await fetch('/stats');
+  const data = await res.json();
+  statsLoaded=true;
+
+  const cats = data.categories;
+  const maxCat = Math.max(...Object.values(cats));
+  const beh = data.behavior_summary;
+  const ratings = data.rating_dist;
+  const maxR = Math.max(...Object.values(ratings));
+
+  let catsHtml = Object.entries(cats).map(([k,v])=>`
+    <div class="bar-row">
+      <div class="bar-label">${catIcon(k)} ${k}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(v/maxCat*100).toFixed(0)}%"></div></div>
+      <div class="bar-val">${v}</div>
+    </div>`).join('');
+
+  let ratingHtml = Object.entries(ratings).map(([k,v])=>`
+    <div class="bar-row">
+      <div class="bar-label">${'★'.repeat(parseInt(k))} ${k}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(v/maxR*100).toFixed(0)}%;background:linear-gradient(90deg,#f7971e,#fda085)"></div></div>
+      <div class="bar-val">${v}</div>
+    </div>`).join('');
+
+  document.getElementById('datasetContent').innerHTML=`
+  <div class="stats-grid">
+    <div class="stats-widget">
+      <h3>📦 توزيع الفئات</h3>${catsHtml}
+    </div>
+    <div class="stats-widget">
+      <h3>⭐ توزيع التقييمات</h3>${ratingHtml}
+    </div>
+    <div class="stats-widget" style="grid-column:1/-1">
+      <h3>🖱️ إجمالي سلوكيات المستخدمين</h3>
+      <div class="behavior-row" style="margin-top:12px">
+        <div class="beh-item">
+          <div class="beh-num" style="color:#6c63ff">${beh.total_views.toLocaleString()}</div>
+          <div class="beh-lbl">مشاهدة</div>
+        </div>
+        <div class="beh-item">
+          <div class="beh-num" style="color:#ff6584">${beh.total_clicks.toLocaleString()}</div>
+          <div class="beh-lbl">نقرة</div>
+        </div>
+        <div class="beh-item">
+          <div class="beh-num" style="color:#43e97b">${beh.total_purchases.toLocaleString()}</div>
+          <div class="beh-lbl">شراء</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>
