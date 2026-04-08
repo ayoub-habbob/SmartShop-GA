@@ -27,15 +27,16 @@
 ## 2. المرجع العلمي
 
 **عنوان المقال:**
-*"Genetic Algorithm-Based Collaborative Filtering for E-Commerce Recommendation Systems"*
+*"E-commerce recommender system based on improved K-means commodity information management model"*
 
 **التفاصيل:**
-- السنة: 2024
-- المصدر: IEEE Transactions on Evolutionary Computation
-- *(يُستبدل بالمقال الفعلي المستخدم من قِبَل الفريق)*
+- **السنة:** 2024
+- **المصدر:** PLOS ONE — PubMed Central (PMC)
+- **تاريخ القبول:** 28 مارس 2024
+- **الرابط:** https://pmc.ncbi.nlm.nih.gov/articles/PMC11063989/
 
 **الفكرة المستخدمة من المقال:**
-استخدام الخوارزمية الجينية كأداة بحث وتحسين بدلاً من الأساليب التقليدية (مثل Matrix Factorization)، مما يتيح استكشاف فضاء حلول أوسع وإيجاد توصيات أكثر تنوعاً وملاءمة.
+اقترح المقال دمج الخوارزمية الجينية مع خوارزمية التجميع لتحسين نظام التوصيات في التجارة الإلكترونية. الخوارزمية الجينية تُستخدم لتحسين اختيار المنتجات عن طريق تحديد **Initial Population** وتعريف **Fitness Function** وضبط المعاملات الأخرى. طبّقنا نفس هذه الفكرة في مشروعنا — حيث كل كروموسوم يمثل مجموعة توصيات، ودالة الـ Fitness تقيّم جودتها بناءً على تقييمات المستخدم وسلوكه الفعلي.
 
 ---
 
@@ -164,7 +165,7 @@ SmartShop-GA/
 
 ## 8. المراجع
 
-1. المقال العلمي المعتمد *(يُضاف هنا)*
+1. **المقال الأساسي:** *"E-commerce recommender system based on improved K-means commodity information management model"* — PLOS ONE, 2024. https://pmc.ncbi.nlm.nih.gov/articles/PMC11063989/
 2. Holland, J.H. (1975). *Adaptation in Natural and Artificial Systems.* MIT Press.
 3. Goldberg, D.E. (1989). *Genetic Algorithms in Search, Optimization, and Machine Learning.* Addison-Wesley.
 4. Ricci, F. et al. (2022). *Recommender Systems Handbook.* Springer.

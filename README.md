@@ -29,10 +29,10 @@ This project implements a **Genetic Algorithm (GA)** for personalized product re
 
 ## 📄 Scientific Reference
 
-**Paper:** *"Genetic Algorithm-Based Collaborative Filtering for E-Commerce Recommendation Systems"*  
-**Year:** 2024–2025  
-**Source:** IEEE Xplore / Springer  
-*(Replace with your actual paper citation)*
+**Paper:** *"E-commerce recommender system based on improved K-means commodity information management model"*
+**Year:** 2024
+**Source:** PLOS ONE — PubMed Central (PMC)
+**Link:** https://pmc.ncbi.nlm.nih.gov/articles/PMC11063989/
 
 ---
 
