@@ -329,8 +329,8 @@ canvas#fitnessChart { width:100%!important; height:100%!important; }
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab active" onclick="showTab('recommendations')">🎯 التوصيات</button>
-  <button class="tab" onclick="showTab('dataset')">📊 إحصائيات الداتا</button>
+  <button class="tab active" onclick="showTab('recommendations')">التوصيات</button>
+  <button class="tab" onclick="showTab('dataset')">إحصائيات الداتا</button>
 </div>
 
 <!-- ══ RECOMMENDATIONS TAB ══ -->
@@ -342,7 +342,7 @@ canvas#fitnessChart { width:100%!important; height:100%!important; }
     <div class="panel-title"><span class="dot"></span> إعدادات الخوارزمية</div>
 
     <div class="form-group">
-      <label>👤 اختر المستخدم</label>
+      <label>اختر المستخدم</label>
       <select id="userSelect">
         {% for u in users %}
         <option value="{{ u.user_id }}">User #{{ u.user_id }} — {{ u.country }} ({{ u.age }})</option>
@@ -351,29 +351,29 @@ canvas#fitnessChart { width:100%!important; height:100%!important; }
     </div>
 
     <div class="form-group">
-      <label>📦 عدد التوصيات: <strong id="nRecsVal">6</strong></label>
+      <label>عدد التوصيات: <strong id="nRecsVal">6</strong></label>
       <input type="range" id="nRecs" min="3" max="9" value="6"
              oninput="document.getElementById('nRecsVal').textContent=this.value">
       <div class="range-row"><span>3</span><span>9</span></div>
     </div>
 
     <div class="form-group">
-      <label>🔁 عدد الأجيال: <strong id="genVal">60</strong></label>
+      <label>عدد الأجيال: <strong id="genVal">60</strong></label>
       <input type="range" id="genRange" min="20" max="150" value="60"
              oninput="document.getElementById('genVal').textContent=this.value">
       <div class="range-row"><span>20</span><span>150</span></div>
     </div>
 
     <button class="btn-run" id="runBtn" onclick="runGA()">
-      🧬 تشغيل الخوارزمية الجينية
+      تشغيل الخوارزمية الجينية
     </button>
 
     <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
       <div style="font-size:0.75rem; color:var(--muted); line-height:1.8;">
-        <div>⚙️ <strong style="color:var(--text)">الانتقاء الطبيعي:</strong> أفضل 20% يبقون</div>
-        <div>🔀 <strong style="color:var(--text)">التزاوج:</strong> نقطة عشوائية</div>
-        <div>🎲 <strong style="color:var(--text)">الطفرة:</strong> معدل 15%</div>
-        <div>🎯 <strong style="color:var(--text)">التنويع:</strong> مكافأة الفئات</div>
+        <div><strong style="color:var(--text)">الانتقاء الطبيعي:</strong> أفضل 20% يبقون</div>
+        <div><strong style="color:var(--text)">التزاوج:</strong> نقطة عشوائية</div>
+        <div><strong style="color:var(--text)">الطفرة:</strong> معدل 15%</div>
+        <div><strong style="color:var(--text)">التنويع:</strong> مكافأة الفئات</div>
       </div>
     </div>
   </div>
@@ -434,12 +434,12 @@ async function runGA(){
   const userId = document.getElementById('userSelect').value;
   const nRecs  = document.getElementById('nRecs').value;
   const gens   = document.getElementById('genRange').value;
-  btn.disabled=true; btn.textContent='⏳ جارٍ التشغيل...';
+  btn.disabled=true; btn.textContent='جارٍ التشغيل...';
 
   document.getElementById('resultsArea').innerHTML=`
     <div class="loading-wrap">
       <div class="dna-loader"></div>
-      <div class="loading-text">الخوارزمية تعمل... الجيل الأمثل قيد الانتخاب 🧬</div>
+      <div class="loading-text">الخوارزمية تعمل... الجيل الأمثل قيد الانتخاب</div>
     </div>`;
 
   try{
@@ -452,7 +452,7 @@ async function runGA(){
   } catch(e){
     document.getElementById('resultsArea').innerHTML=`<div class="empty-state"><div class="empty-icon">⚠️</div><p>خطأ في الاتصال بالخادم</p></div>`;
   }
-  btn.disabled=false; btn.textContent='🧬 تشغيل الخوارزمية الجينية';
+  btn.disabled=false; btn.textContent='تشغيل الخوارزمية الجينية';
 }
 
 function renderResults(data){
@@ -470,23 +470,23 @@ function renderResults(data){
     <div class="gen-badge">✅ ${generations_run} جيل · Fitness: ${bestFit}</div>
   </div>
   <div class="user-profile-card">
-    <div class="profile-title">📋 ملف المستخدم</div>
+    <div class="profile-title">ملف المستخدم</div>
     <div class="profile-grid">
-      <div class="profile-item"><span class="profile-lbl">🛒 أكثر شراء</span><span class="profile-val">${(up.top_purchased_cats||[]).join(', ')||'—'}</span></div>
-      <div class="profile-item"><span class="profile-lbl">👆 أكثر نقر</span><span class="profile-val">${(up.top_clicked_cats||[]).join(', ')||'—'}</span></div>
-      <div class="profile-item"><span class="profile-lbl">💰 النطاق السعري</span><span class="profile-val">${up.price_range||'—'}</span></div>
-      <div class="profile-item"><span class="profile-lbl">📦 المرشحون</span><span class="profile-val">${up.candidates_count||0} منتج · ${up.purchased_count||0} مستبعد</span></div>
+      <div class="profile-item"><span class="profile-lbl">أكثر شراء</span><span class="profile-val">${(up.top_purchased_cats||[]).join(', ')||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">أكثر نقر</span><span class="profile-val">${(up.top_clicked_cats||[]).join(', ')||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">النطاق السعري</span><span class="profile-val">${up.price_range||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">المرشحون</span><span class="profile-val">${up.candidates_count||0} منتج · ${up.purchased_count||0} مستبعد</span></div>
     </div>
   </div>
 
   <div class="chart-section">
-    <div class="chart-title">📈 تطور الـ Fitness عبر الأجيال</div>
+    <div class="chart-title">تطور الـ Fitness عبر الأجيال</div>
     <div class="chart-wrap"><canvas id="fitnessChart"></canvas></div>
   </div>
 
   <div class="products-section">
     <div class="section-header">
-      <h2>🎯 المنتجات الموصى بها</h2>
+      <h2>المنتجات الموصى بها</h2>
       <span class="count-chip">${recommendations.length} منتجات</span>
     </div>
     <div class="products-grid">`;
@@ -584,13 +584,13 @@ async function loadDatasetStats(){
   document.getElementById('datasetContent').innerHTML=`
   <div class="stats-grid">
     <div class="stats-widget">
-      <h3>📦 توزيع الفئات</h3>${catsHtml}
+      <h3>توزيع الفئات</h3>${catsHtml}
     </div>
     <div class="stats-widget">
-      <h3>⭐ توزيع التقييمات</h3>${ratingHtml}
+      <h3>توزيع التقييمات</h3>${ratingHtml}
     </div>
     <div class="stats-widget" style="grid-column:1/-1">
-      <h3>🖱️ إجمالي سلوكيات المستخدمين</h3>
+      <h3>إجمالي سلوكيات المستخدمين</h3>
       <div class="behavior-row" style="margin-top:12px">
         <div class="beh-item">
           <div class="beh-num" style="color:#6c63ff">${beh.total_views.toLocaleString()}</div>
