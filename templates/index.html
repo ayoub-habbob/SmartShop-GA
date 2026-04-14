@@ -384,17 +384,16 @@ canvas#fitnessChart { width:100%!important; height:100%!important; }
 <script>
 // ── Category icons ──
 const CAT_ICONS = {
-  'إلكترونيات':'📱','ملابس':'👗','كتب':'📚','ألعاب':'🧸',
-  'رياضة':'⚽','منزل وديكور':'🏠','عناية شخصية':'💄','مواد غذائية':'🍎',
-  'مجوهرات':'💎','أثاث':'🛋️'
+  'Electronics':'📱','Clothes':'👗','Books':'📚','Toys':'🧸',
+  'Sports':'⚽','Home Appliances':'🏠','Perfumes':'💄',
+  'Food':'🍎','Jewelry':'💎','Furniture':'🛋️'
 };
 function catIcon(c){ return CAT_ICONS[c] || '📦'; }
 function catColor(c){
   const map={
-    'إلكترونيات':'#6c63ff','ملابس':'#ff6584','كتب':'#43e97b',
-    'ألعاب':'#f7971e','رياضة':'#4facfe','منزل وديكور':'#fa709a',
-    'عناية شخصية':'#a18cd1','مواد غذائية':'#fda085',
-    'مجوهرات':'#f093fb','أثاث':'#c471ed'
+    'Electronics':'#6c63ff','Clothes':'#ff6584','Books':'#43e97b',
+    'Toys':'#f7971e','Sports':'#4facfe','Home Appliances':'#fa709a',
+    'Perfumes':'#a18cd1','Food':'#fda085','Jewelry':'#f093fb','Furniture':'#c471ed'
   };
   return map[c]||'#7070a0';
 }
@@ -473,7 +472,7 @@ function renderResults(data){
       <div class="card-body">
         <div class="card-cat">${p.category}</div>
         <div class="card-id">#${p.product_id}</div>
-        <div class="card-price">${p.price.toLocaleString()} <span>ل.س</span></div>
+        <div class="card-price">${p.price.toLocaleString()} <span>$</span></div>
         <div class="stars">${stars}<span class="avg-r">${p.avg_rating}</span></div>
       </div>
     </div>`;
