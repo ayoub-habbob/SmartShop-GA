@@ -269,6 +269,26 @@ canvas#fitnessChart { width:100%!important; height:100%!important; }
 @media(max-width:500px){
   .products-grid{grid-template-columns:1fr}
 }
+
+/* User Profile Card */
+.user-profile-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 20px; margin-bottom: 20px;
+  animation: fadeSlide 0.4s ease;
+}
+.profile-title {
+  font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;
+  font-weight: 700;
+}
+.profile-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 10px;
+}
+.profile-item {
+  background: var(--surface); border-radius: 8px; padding: 8px 12px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.profile-lbl { font-size: 0.72rem; color: var(--muted); }
+.profile-val { font-size: 0.82rem; color: var(--text); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -436,8 +456,9 @@ async function runGA(){
 }
 
 function renderResults(data){
-  const {user, recommendations, fitness_history, generations_run} = data;
+  const {user, recommendations, fitness_history, generations_run, user_profile} = data;
   const bestFit = fitness_history[fitness_history.length-1];
+  const up = user_profile || {};
 
   let html = `
   <div class="user-info">
@@ -447,6 +468,15 @@ function renderResults(data){
       <p>العمر: ${user.age} سنة</p>
     </div>
     <div class="gen-badge">✅ ${generations_run} جيل · Fitness: ${bestFit}</div>
+  </div>
+  <div class="user-profile-card">
+    <div class="profile-title">📋 ملف المستخدم</div>
+    <div class="profile-grid">
+      <div class="profile-item"><span class="profile-lbl">🛒 أكثر شراء</span><span class="profile-val">${(up.top_purchased_cats||[]).join(', ')||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">👆 أكثر نقر</span><span class="profile-val">${(up.top_clicked_cats||[]).join(', ')||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">💰 النطاق السعري</span><span class="profile-val">${up.price_range||'—'}</span></div>
+      <div class="profile-item"><span class="profile-lbl">📦 المرشحون</span><span class="profile-val">${up.candidates_count||0} منتج · ${up.purchased_count||0} مستبعد</span></div>
+    </div>
   </div>
 
   <div class="chart-section">
