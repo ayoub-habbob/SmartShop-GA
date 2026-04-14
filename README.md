@@ -1,10 +1,10 @@
-# 🧬 SmartShop GA — Genetic Algorithm Recommendation System
+#  SmartShop GA — Genetic Algorithm Recommendation System
 
 > A full-stack web application that uses **Genetic Algorithms** to optimize product recommendations in an e-commerce store.
 
 ---
 
-## 👥 Team Members
+##  Team Members
 
 | # | الاسم | ID الجامعة |
 |---|-------|------------|
@@ -18,7 +18,7 @@
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This project implements a **Genetic Algorithm (GA)** for personalized product recommendation optimization, based on real user behavior and rating data.
 
@@ -27,7 +27,7 @@ This project implements a **Genetic Algorithm (GA)** for personalized product re
 
 ---
 
-## 📄 Scientific Reference
+##  Scientific Reference
 
 **Paper:** *"E-commerce recommender system based on improved K-means commodity information management model"*
 **Year:** 2024
@@ -36,7 +36,7 @@ This project implements a **Genetic Algorithm (GA)** for personalized product re
 
 ---
 
-## 🧬 How the Genetic Algorithm Works
+##  How the Genetic Algorithm Works
 
 ```
 Population Init → Fitness Evaluation → Selection → Crossover → Mutation → Repeat
@@ -61,7 +61,7 @@ score(user, product) = rating/5  +  viewed×0.1 + clicked×0.3 + purchased×1.0
 
 ---
 
-## 📂 Dataset — HW__Data_S25
+##  Dataset — HW__Data_S25
 
 | File | Records | Columns |
 |------|---------|---------|
@@ -72,13 +72,13 @@ score(user, product) = rating/5  +  viewed×0.1 + clicked×0.3 + purchased×1.0
 
 ---
 
-## 🌐 Live Demo
+##  Live Demo
 
 https://smartshop-ga.onrender.com
 
 ---
 
-## 🚀 Installation & Run
+##  Installation & Run
 
 ```bash
 # 1. Clone the repo
@@ -99,7 +99,7 @@ http://localhost:5000
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Backend:** Python, Flask
 - **Algorithm:** Custom Genetic Algorithm (NumPy)
@@ -109,7 +109,7 @@ http://localhost:5000
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 SmartShop-GA/
@@ -128,11 +128,11 @@ SmartShop-GA/
 
 ---
 
-## 📸 Features
+##  Features
 
-- 🎯 Real-time GA recommendation generation
-- 📈 Live fitness evolution chart
-- 👤 Per-user personalization (1,000 users)
-- 📦 6-category product diversity
-- 📊 Dataset statistics dashboard
-- 🌙 Dark mode Arabic RTL interface
+-  Real-time GA recommendation generation
+-  Live fitness evolution chart
+-  Per-user personalization (1,000 users)
+-  6-category product diversity
+-  Dataset statistics dashboard
+-  Dark mode Arabic RTL interface
