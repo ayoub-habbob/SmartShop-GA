@@ -12,7 +12,6 @@
 | **الفصل** | S25 |
 | **رابط GitHub** | https://github.com/ayoub-habbob/SmartShop-GA |
 | **رابط الاستضافة** | https://smartshop-ga.onrender.com|
-| **رابط الفيديو** | *(يُضاف بعد التسجيل)* |
 
 ---
 
