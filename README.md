@@ -72,11 +72,17 @@ score(user, product) = rating/5  +  viewed×0.1 + clicked×0.3 + purchased×1.0
 
 ---
 
+## 🌐 Live Demo
+
+https://smartshop-ga.onrender.com
+
+---
+
 ## 🚀 Installation & Run
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/SmartShop-GA.git
+git clone https://github.com/ayoub-habbob/SmartShop-GA.git
 cd SmartShop-GA
 
 # 2. Install dependencies
